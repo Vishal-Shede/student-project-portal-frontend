@@ -4,11 +4,8 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
 
-
-function Dashboard() {
-  return <h1>Dashboard Page</h1>;
-}
 
 function App() {
 
