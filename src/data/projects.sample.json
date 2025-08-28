@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "TalkingTree 2.0",
+    "year": 2025,
+    "abstract": "VR + AI group discussion trainer for ESL learners.",
+    "githubUrl": "https://github.com/example/talkingtree",
+    "pdfUrl": "https://example.com/paper.pdf",
+    "owner": { "id": 101, "fullName": "Vishal Shede" }
+  },
+  {
+    "id": 2,
+    "title": "ET Student Repo",
+    "year": 2024,
+    "abstract": "Department portal for showcasing student projects.",
+    "githubUrl": "",
+    "pdfUrl": "",
+    "owner": { "id": 102, "fullName": "Ananya Kulkarni" }
+  }
+]

@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"; 
+import Home from "./pages/Home";
 
-function Home() {
-  return <h1>Home Page</h1>;
-}
+
+
 function Login() {
   return <h1>Login Page</h1>;
 }
@@ -17,7 +17,7 @@ function Dashboard() {
 function App() {
 
     console.log("API base:", import.meta.env.VITE_API_BASE_URL);
-    
+
   return (
     <div>
       <Navbar />
