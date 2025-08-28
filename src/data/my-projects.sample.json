@@ -1,0 +1,10 @@
+[
+  {
+    "id": 101,
+    "title": "My Capstone: Student Repo Portal",
+    "year": 2025,
+    "abstract": "A portal to upload and showcase student projects.",
+    "githubUrl": "https://github.com/example/student-repo",
+    "owner": { "id": 1, "fullName": "Demo User" }
+  }
+]

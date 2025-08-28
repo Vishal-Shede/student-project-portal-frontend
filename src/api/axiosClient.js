@@ -12,4 +12,19 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
+axiosClient.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401 || status === 403) {
+      // Token invalid/expired — clear and refresh
+      window.localStorage.removeItem("token");
+      window.localStorage.removeItem("user");
+      // Optional: redirect to login
+      // window.location.assign("/login");
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosClient;
