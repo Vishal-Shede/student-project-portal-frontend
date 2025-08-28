@@ -41,7 +41,8 @@ function Login() {
       const { token, user } = await apiLogin({ email: email.trim(), password });
       // Save in global auth and persist (AuthContext handles localStorage)
       login(token, user);
-      navigate("/dashboard");
+      const from = location.state?.from || "/dashboard";
+      navigate(from, { replace: true });
     } catch (err) {
       const status = err?.response?.status;
       if (status === 401) setError("Incorrect email or password.");
