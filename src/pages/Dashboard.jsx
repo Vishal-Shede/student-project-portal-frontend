@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
-import { listMine } from "../api/projectsApi";
+import ProjectForm from "../components/ProjectForm";
+import { listMine, deleteProject } from "../api/projectsApi";
 
 export default function Dashboard() {
   const [tab, setTab] = useState("my"); // "my" | "add"
 
-  // state for My Projects
+  // list state
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState("");
 
-  // load only when the "my" tab is active (and on first mount)
+  // edit state
+  const [editingProject, setEditingProject] = useState(null);
+  const isEditMode = Boolean(editingProject);
+
+  // load on "my" tab
   useEffect(() => {
     if (tab !== "my") return;
 
@@ -27,7 +32,7 @@ export default function Dashboard() {
         try {
           const mod = await import("../data/my-projects.sample.json");
           if (active) setProjects(mod.default || []);
-        } catch (e2) {
+        } catch {
           if (active) setError("Failed to load your projects.");
         }
       } finally {
@@ -38,13 +43,34 @@ export default function Dashboard() {
     return () => { active = false; };
   }, [tab]);
 
-  // placeholders for later steps
+  // owner actions
   function startEdit(p) {
-    alert(`Edit (coming soon): ${p.title}`);
-    setTab("add"); // we'll open the form in edit mode later
+    setEditingProject(p);
+    setTab("add"); // open form in edit mode
   }
-  function startDelete(p) {
-    alert(`Delete (coming soon): ${p.title}`);
+
+  async function startDelete(p) {
+    const sure = window.confirm(`Delete "${p.title}"? This cannot be undone.`);
+    if (!sure) return;
+    try {
+      await deleteProject(p.id);
+      setProjects((prev) => prev.filter((x) => x.id !== p.id));
+      alert("Deleted.");
+    } catch (err) {
+      alert("Failed to delete. Please try again.");
+    }
+  }
+
+  // when form saves successfully
+  function handleSaved(saved) {
+    if (isEditMode) {
+      setProjects((prev) => prev.map((p) => (p.id === saved.id ? saved : p)));
+      setEditingProject(null);
+    } else {
+      setProjects((prev) => [saved, ...prev]);
+    }
+    setTab("my");
+    alert(isEditMode ? "Updated!" : "Created!");
   }
 
   return (
@@ -54,16 +80,16 @@ export default function Dashboard() {
       {/* Tabs */}
       <div style={{ margin: "1rem 0" }}>
         <button
-          onClick={() => setTab("my")}
+          onClick={() => { setTab("my"); setEditingProject(null); }}
           style={{ marginRight: 8, padding: "6px 10px", fontWeight: tab === "my" ? 700 : 400 }}
         >
           My Projects
         </button>
         <button
-          onClick={() => setTab("add")}
+          onClick={() => { setTab("add"); setEditingProject(null); }}
           style={{ padding: "6px 10px", fontWeight: tab === "add" ? 700 : 400 }}
         >
-          Add Project
+          {isEditMode ? "Edit Project" : "Add Project"}
         </button>
       </div>
 
@@ -71,7 +97,6 @@ export default function Dashboard() {
       {tab === "my" ? (
         <div>
           <h2>My Projects</h2>
-
           {loading && <p>Loading…</p>}
           {error && <p style={{ color: "crimson" }}>{error}</p>}
           {!loading && !error && projects.length === 0 && <p>You have no projects yet.</p>}
@@ -93,8 +118,12 @@ export default function Dashboard() {
         </div>
       ) : (
         <div>
-          <h2>Add Project</h2>
-          <p>(Form will appear here in the next step.)</p>
+          <h2>{isEditMode ? "Edit Project" : "Add Project"}</h2>
+          <ProjectForm
+            initialData={editingProject}
+            onSaved={handleSaved}
+            onCancel={() => { setEditingProject(null); setTab("my"); }}
+          />
         </div>
       )}
     </div>
