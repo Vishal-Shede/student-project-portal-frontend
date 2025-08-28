@@ -2,11 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"; 
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 
-
-function Login() {
-  return <h1>Login Page</h1>;
-}
 
 function Dashboard() {
   return <h1>Dashboard Page</h1>;
